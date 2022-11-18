@@ -48,7 +48,7 @@ class YoutubeTrackDownloader:
 
 
 class YoutubePlaylistDownloader:
-    def download(self, track_response: TracksResponseModel, playlist: PlaylistResponseModel):
+    def download(self, track_response: TracksResponseModel, playlist: PlaylistResponseModel) -> None:
         track_downloader = YoutubeTrackDownloader(playlist_name=playlist.name)
         for track_item in track_response.items:
             try:
