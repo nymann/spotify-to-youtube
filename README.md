@@ -1,6 +1,6 @@
 # Spotify To YouTube
 
-Downloads a Spotify playlist via YouTube Music.
+Downloads a Spotify playlist via YouTube Music with metadata added to each track from Spotify.
 
 ## External dependencies
 
