@@ -16,8 +16,8 @@ class SpotifyClient:
     @staticmethod
     def normalize_playlist_id(playlist_id: str) -> str:
         if "playlist/" in playlist_id:
-            a = playlist_id
-            playlist_id = a[a.index("playlist/") + len("playlist/") :]
+            p_id = playlist_id
+            playlist_id = p_id[p_id.index("playlist/") + len("playlist/") :]
         if "?" in playlist_id:
             playlist_id = playlist_id[: playlist_id.index("?")]
         return playlist_id
@@ -34,5 +34,5 @@ class SpotifyClient:
             **requests.get(
                 url=url,
                 headers=self.headers,
-            ).json()
+            ).json(),
         )

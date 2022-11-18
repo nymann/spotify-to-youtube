@@ -1,6 +1,6 @@
 import logging
 from pathlib import Path
-import subprocess
+import subprocess  # noqa: S404
 
 from spotify_to_youtube.metadata import Metadata
 from spotify_to_youtube.spotify.schemas.playlist import PlaylistResponseModel
@@ -14,7 +14,7 @@ class YoutubeTrackDownloader:
         self.out_dir = Path(self.playlist_name)
         self.out_dir.mkdir(exist_ok=True)
 
-    def download(self, track: Track) -> Path:
+    def download(self, track: Track) -> Path:  # noqa: WPS210
         artist = ", ".join(artist.name for artist in track.artists)
         title = track.name
         search_query = f"{artist} - {title}"
@@ -25,7 +25,7 @@ class YoutubeTrackDownloader:
         logging.info("Downloading: %s", filename)
         output = str(self.out_dir.joinpath(filename))
         logging.warning(output)
-        subprocess.run(
+        subprocess.run(  # noqa: S607, S603
             [
                 "yt-dlp",
                 "--output",
@@ -50,11 +50,11 @@ class YoutubeTrackDownloader:
 class YoutubePlaylistDownloader:
     def download(self, track_response: TracksResponseModel, playlist: PlaylistResponseModel):
         track_downloader = YoutubeTrackDownloader(playlist_name=playlist.name)
-        for item in track_response.items:
+        for track_item in track_response.items:
             try:
-                mp3 = track_downloader.download(track=item.track)
-            except subprocess.CalledProcessError as e:
-                logging.error(e)
+                mp3 = track_downloader.download(track=track_item.track)
+            except subprocess.CalledProcessError as error:
+                logging.error(error)
                 continue
-            metadata = Metadata(track=item.track, playlist_name=track_downloader.playlist_name)
+            metadata = Metadata(track=track_item.track, playlist_name=track_downloader.playlist_name)
             metadata.add_to_file(mp3=mp3)

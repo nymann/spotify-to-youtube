@@ -1,6 +1,6 @@
 import logging
 from pathlib import Path
-import subprocess
+import subprocess  # noqa: S404
 from typing import Any
 
 from spotify_to_youtube.spotify.schemas.tracks import Track
@@ -9,13 +9,13 @@ from spotify_to_youtube.spotify.schemas.tracks import Track
 class Metadata:
     def __init__(self, track: Track, playlist_name: str) -> None:
         self.track = track
-        artist_names = ", ".join(a.name for a in track.artists)
-        self._m: dict[str, Any] = {
+        artist_names = ", ".join(artist.name for artist in track.artists)
+        self._metadata: dict[str, Any] = {
             "artist": artist_names,
             # "artistsort": track.,
             "album": track.album.name,
             # "albumsort": track.,
-            "albumartist": ", ".join(a.name for a in track.album.artists),
+            "albumartist": ", ".join(artist.name for artist in track.album.artists),
             # "albumartistsort": track.,
             "title": track.name,
             # "titlesort": track.,
@@ -57,11 +57,11 @@ class Metadata:
         cmd: list[str] = ["ffmpeg", "-i", str(mp3), "-f", "mp3", "-y"]
         cmd.extend(self._add_metadata())
         cmd.extend(["-c", "copy", str(opus)])
-        subprocess.run(cmd)
+        subprocess.run(cmd)  # noqa: S603
         mp3.unlink()
 
     def _add_metadata(self) -> list[str]:
         metadata: list[str] = []
-        for tag_name, tag_val in self._m.items():
+        for tag_name, tag_val in self._metadata.items():
             metadata.extend(["-metadata", f"{tag_name}={tag_val}"])
         return metadata
